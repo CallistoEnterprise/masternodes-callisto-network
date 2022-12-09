@@ -1,0 +1,582 @@
+[
+  {
+    "type": "event",
+    "name": "NodeActivated",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "authority",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "NodeAdded",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "authority",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "tuple",
+        "name": "node",
+        "internalType": "struct MasterNodes.Node",
+        "indexed": false,
+        "components": [
+          { "type": "address", "name": "owner", "internalType": "address" },
+          { "type": "bool", "name": "isActive", "internalType": "bool" },
+          { "type": "uint8", "name": "isUser", "internalType": "uint8" },
+          {
+            "type": "uint256[3]",
+            "name": "balances",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256[3]",
+            "name": "rewardPerShares",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256",
+            "name": "unlockTime",
+            "internalType": "uint256"
+          },
+          { "type": "string", "name": "url", "internalType": "string" }
+        ]
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "NodeDeactivated",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "authority",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "NodeRemoved",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "authority",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "previousOwner",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newOwner",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RescueERC20",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "token",
+        "internalType": "address",
+        "indexed": false
+      },
+      {
+        "type": "address",
+        "name": "to",
+        "internalType": "address",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "value",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RewardAdded",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "reward",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "SetRatios",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_ratioCLO",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "_ratioCLOE",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "_ratioSOY",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "_usersNodesRewardRatio",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "CLOE_TOKEN",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "SOY_TOKEN",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "accumulatedRewardPerShare",
+    "inputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "activateNode",
+    "inputs": [
+      { "type": "address", "name": "authority", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "payable",
+    "outputs": [],
+    "name": "addNode",
+    "inputs": [
+      { "type": "uint256", "name": "amountCLOE", "internalType": "uint256" },
+      { "type": "uint256", "name": "amountSOY", "internalType": "uint256" },
+      { "type": "address", "name": "authority", "internalType": "address" },
+      { "type": "string", "name": "url", "internalType": "string" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "authorityByOwner",
+    "inputs": [{ "type": "address", "name": "", "internalType": "address" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "claimReward",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "deactivateNode",
+    "inputs": [
+      { "type": "address", "name": "authority", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "getAllocationX1000",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "tuple[]",
+        "name": "nodes",
+        "internalType": "struct MasterNodes.Node[]",
+        "components": [
+          { "type": "address", "name": "owner", "internalType": "address" },
+          { "type": "bool", "name": "isActive", "internalType": "bool" },
+          { "type": "uint8", "name": "isUser", "internalType": "uint8" },
+          {
+            "type": "uint256[3]",
+            "name": "balances",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256[3]",
+            "name": "rewardPerShares",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256",
+            "name": "unlockTime",
+            "internalType": "uint256"
+          },
+          { "type": "string", "name": "url", "internalType": "string" }
+        ]
+      },
+      {
+        "type": "address[]",
+        "name": "authorities",
+        "internalType": "address[]"
+      }
+    ],
+    "name": "getCallistoNodes",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      { "type": "uint256", "name": "maxNodes", "internalType": "uint256" },
+      { "type": "uint256", "name": "inactiveNodes", "internalType": "uint256" },
+      {
+        "type": "uint256[3]",
+        "name": "totalDeposits",
+        "internalType": "uint256[3]"
+      }
+    ],
+    "name": "getDetails",
+    "inputs": [{ "type": "uint256", "name": "id", "internalType": "uint256" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "tuple",
+        "name": "",
+        "internalType": "struct MasterNodes.Node",
+        "components": [
+          { "type": "address", "name": "owner", "internalType": "address" },
+          { "type": "bool", "name": "isActive", "internalType": "bool" },
+          { "type": "uint8", "name": "isUser", "internalType": "uint8" },
+          {
+            "type": "uint256[3]",
+            "name": "balances",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256[3]",
+            "name": "rewardPerShares",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256",
+            "name": "unlockTime",
+            "internalType": "uint256"
+          },
+          { "type": "string", "name": "url", "internalType": "string" }
+        ]
+      }
+    ],
+    "name": "getNodeByAuthority",
+    "inputs": [
+      { "type": "address", "name": "authority", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "tuple",
+        "name": "node",
+        "internalType": "struct MasterNodes.Node",
+        "components": [
+          { "type": "address", "name": "owner", "internalType": "address" },
+          { "type": "bool", "name": "isActive", "internalType": "bool" },
+          { "type": "uint8", "name": "isUser", "internalType": "uint8" },
+          {
+            "type": "uint256[3]",
+            "name": "balances",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256[3]",
+            "name": "rewardPerShares",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256",
+            "name": "unlockTime",
+            "internalType": "uint256"
+          },
+          { "type": "string", "name": "url", "internalType": "string" }
+        ]
+      },
+      { "type": "address", "name": "authority", "internalType": "address" }
+    ],
+    "name": "getNodeById",
+    "inputs": [
+      { "type": "uint256", "name": "id", "internalType": "uint256" },
+      { "type": "bool", "name": "belongUsers", "internalType": "bool" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      { "type": "uint256", "name": "callistoNodes", "internalType": "uint256" },
+      { "type": "uint256", "name": "usersNodes", "internalType": "uint256" }
+    ],
+    "name": "getNumberOfNodes",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      { "type": "uint256", "name": "reward", "internalType": "uint256" }
+    ],
+    "name": "getReward",
+    "inputs": [{ "type": "address", "name": "user", "internalType": "address" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "getRewardPerSecond",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "tuple",
+        "name": "node",
+        "internalType": "struct MasterNodes.Node",
+        "components": [
+          { "type": "address", "name": "owner", "internalType": "address" },
+          { "type": "bool", "name": "isActive", "internalType": "bool" },
+          { "type": "uint8", "name": "isUser", "internalType": "uint8" },
+          {
+            "type": "uint256[3]",
+            "name": "balances",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256[3]",
+            "name": "rewardPerShares",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256",
+            "name": "unlockTime",
+            "internalType": "uint256"
+          },
+          { "type": "string", "name": "url", "internalType": "string" }
+        ]
+      },
+      { "type": "address", "name": "authority", "internalType": "address" }
+    ],
+    "name": "getUsersNodeByOwner",
+    "inputs": [
+      { "type": "address", "name": "owner", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "globalFarm",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "inactiveUnlockTime",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "initialize",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "lastRewardTimestamp",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "maxCLO",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "maxCLOE",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "maxSOY",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "minCLO",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "minCLOE",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "minSOY",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "notifyRewardAmount",
+    "inputs": [
+      { "type": "uint256", "name": "reward", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "owner",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "ratio",
+    "inputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "removeNode",
+    "inputs": [
+      { "type": "address", "name": "authority", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "rescueERC20",
+    "inputs": [
+      { "type": "address", "name": "token", "internalType": "address" },
+      { "type": "address", "name": "to", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setRatios",
+    "inputs": [
+      { "type": "uint256", "name": "_ratioCLOE", "internalType": "uint256" },
+      { "type": "uint256", "name": "_ratioSOY", "internalType": "uint256" },
+      {
+        "type": "uint256",
+        "name": "_usersNodesRewardRatio",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "transferOwnership",
+    "inputs": [
+      { "type": "address", "name": "newOwner", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "update",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "usersNodesRewardRatio",
+    "inputs": []
+  }
+]
