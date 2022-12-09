@@ -261,7 +261,7 @@ function App() {
         .call();
       // transfor to ether
       const approvedInEther = ethers.utils.formatEther(approved);
-      if (Number(approvedInEther) > eInputCloe) {
+      if (Number(approvedInEther) >= eInputCloe) {
         setCloeApproved(true);
       } else {
         setCloeApproved(false);
@@ -277,7 +277,7 @@ function App() {
         .call();
       // transfor to ether
       const approvedInEther = ethers.utils.formatEther(approved);
-      if (Number(approvedInEther) > eInputSoy) {
+      if (Number(approvedInEther) >= eInputSoy) {
         setSoyApproved(true);
       } else {
         setSoyApproved(false);
@@ -312,6 +312,7 @@ function App() {
     const amountSOY = Web3.utils.toWei(soyAmountToAdd.toString(), "ether");
     const amountSOYHex = web3.utils.toBN(amountSOY);
     const amountCLO = Web3.utils.toWei(cloAmountToAdd.toString(), "ether");
+    const amountCLOHex = web3.utils.toBN(amountCLO);
 
     const Txn = await web3MasternodeMeta.methods
       .addNode(
@@ -322,7 +323,7 @@ function App() {
       )
       .send({
         from: account,
-        value: web3.utils.toHex(Number(amountCLO)),
+        value: web3.utils.toHex(amountCLOHex),
       });
     return Txn;
   };
@@ -370,9 +371,10 @@ function App() {
         //start the addNode transaction
         try {
           const res = await addNodeSend();
-          setConsoleLog("Masternode added successfully. Admin will approve it in 48 hours.");
+          setConsoleLog("Masternode added successfully. It will be approved under 48 hours.");
         } catch (error) {
           const result = (error as Error).message;
+          console.log("Error when adding node.");
           setConsoleLog(result);
         }
         setBtnTxn(false);
