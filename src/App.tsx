@@ -224,7 +224,6 @@ function App() {
       const rewardsInEther = ethers.utils.formatEther(rewards);
       // convert to decimal
       const rewardsInDecimals = Number(rewardsInEther).toFixed(2);
-      console.log("rewards:", rewardsInDecimals);
       setSoyRewards(Number(rewardsInDecimals));
     }
   };
@@ -236,31 +235,20 @@ function App() {
       const nodeDetails = await web3Masternode.methods
         .getNodeByAuthority(account)
         .call();
-      console.log("nodeDetails:", nodeDetails);
-      
-
-      
 
       // getUsersNodeByOwner
       const nodAuthDetails = await web3Masternode.methods
         .getUsersNodeByOwner(account)
         .call();
-      console.log("nodAuthDetails:", nodAuthDetails);
+      
       setNodeAuthAddress(nodAuthDetails.authority);
 
       setNodeUrl(nodAuthDetails.url);
-      console.log("nodeUrl:", nodeUrl);
-
-      console.log("nodeDetails:", nodAuthDetails.node.isActive);
       setNodeActiveMode(nodAuthDetails.node.isActive);
       const unlockTime = nodAuthDetails.node.unlockTime;
       // date now in seconds
       const nowTime = Math.floor(Date.now() / 1000);
       const diffInTime = unlockTime - nowTime;
-
-      console.log("diffInTime:", diffInTime);
-      console.log("nowTime:", nowTime);
-      console.log("unlockTime:", unlockTime);
       setNodeInactivetime(diffInTime);
     }
   };
@@ -273,8 +261,6 @@ function App() {
         .call();
       // transfor to ether
       const approvedInEther = ethers.utils.formatEther(approved);
-      console.log("CLOE approved:", Number(approvedInEther));
-      console.log("cloe Amount from input:", eInputCloe);
       if (Number(approvedInEther) > eInputCloe) {
         setCloeApproved(true);
       } else {
@@ -291,8 +277,6 @@ function App() {
         .call();
       // transfor to ether
       const approvedInEther = ethers.utils.formatEther(approved);
-      console.log("SOY approved:", Number(approvedInEther));
-      console.log("soy Amount from input:", eInputSoy);
       if (Number(approvedInEther) > eInputSoy) {
         setSoyApproved(true);
       } else {
@@ -324,16 +308,15 @@ function App() {
     setConsoleLog("Adding Masternode in progress..");
     // function addNode(uint256 amountCLOE, uint256 amountSOY, address authority, string calldata url) external payable {
     const amountCLOE = Web3.utils.toWei(cloeAmountToAdd.toString(), "ether");
-    console.log("amountCLOE addNode:", amountCLOE);
+    const amountCLOEHex = web3.utils.toHex(web3.utils.toBN(amountCLOE))
     const amountSOY = Web3.utils.toWei(soyAmountToAdd.toString(), "ether");
-    console.log("amountSOY addNode:", amountSOY);
+    const amountSOYHex = web3.utils.toHex(web3.utils.toBN(amountSOY));
     const amountCLO = Web3.utils.toWei(cloAmountToAdd.toString(), "ether");
-    console.log("amountCLO addNode:", amountCLO);
 
     const Txn = await web3MasternodeMeta.methods
       .addNode(
-        web3.utils.toHex(Number(amountCLOE)),
-        web3.utils.toHex(Number(amountSOY)),
+        amountCLOEHex,
+        amountSOYHex,
         addressToAdd,
         urlToAdd
       )
@@ -341,8 +324,6 @@ function App() {
         from: account,
         value: web3.utils.toHex(Number(amountCLO)),
       });
-    console.log("addNode Txn:");
-    console.log(Txn);
     return Txn;
   };
 
@@ -353,26 +334,20 @@ function App() {
       cloeAmountToAdd.toString(),
       "ether"
     );
-    console.log("cloeAmountInWei:", cloeAmountInWei);
     const Txn = await web3CLOEMeta.methods
       .approve(MasternodeAddressEnv, cloeAmountInWei)
       .send({ from: account });
     setConsoleLog("CLOE token amount approved..");
-    console.log("approveCloe Txn:");
-    console.log(Txn);
     return Txn;
   };
 
   const approveSoy = async () => {
     setConsoleLog("SOY approval in progress..");
     const soyAmountInWei = Web3.utils.toWei(soyAmountToAdd.toString(), "ether");
-    console.log("soyAmountInWei:", soyAmountInWei);
     const Txn = await web3SOYMeta.methods
       .approve(MasternodeAddressEnv, soyAmountInWei)
       .send({ from: account });
     setConsoleLog("SOY token amount approved..");
-    console.log("approveSoy Txn:");
-    console.log(Txn);
     return Txn;
   };
 
@@ -395,12 +370,9 @@ function App() {
         //start the addNode transaction
         try {
           const res = await addNodeSend();
-          console.log("Add node started..");
-          console.log(res);
-          setConsoleLog("Master node added successfully :)");
+          setConsoleLog("Masternode added successfully. Admin will approve it in 48 hours.");
         } catch (error) {
           const result = (error as Error).message;
-          console.log(result);
           setConsoleLog(result);
         }
         setBtnTxn(false);
@@ -419,8 +391,6 @@ function App() {
       const Txn = await web3MasternodeMeta.methods
         .claimReward()
         .send({ from: account });
-      console.log("claimRewards Txn:");
-      console.log(Txn);
       setBtnTxn(false);
       checkSoyRewards();
     }
@@ -435,8 +405,6 @@ function App() {
       const Txn = await web3MasternodeMeta.methods
         .removeNode(account)
         .send({ from: account });
-      console.log("withdrawCollateral Txn:");
-      console.log(Txn);
       setBtnTxn(false);
     }
   };
@@ -450,8 +418,6 @@ function App() {
       const Txn = await web3MasternodeMeta.methods
         .deactivateNode(account)
         .send({ from: account });
-      console.log("closeNode Txn:");
-      console.log(Txn);
       setBtnTxn(false);
     }
   };
@@ -464,12 +430,9 @@ function App() {
       // Start the token amount approval for CLOE
       try {
         const res = await approveCloe();
-        console.log("CLO approval started..");
-        console.log(res);
         setCloeApproved(true);
       } catch (error) {
         const result = (error as Error).message;
-        console.log(result);
       }
       setBtnTxn(false);
     }
@@ -483,12 +446,9 @@ function App() {
       // Start the token amount approval for SOY
       try {
         const res = await approveSoy();
-        console.log("SOY approval started..");
-        console.log(res);
         setSoyApproved(true);
       } catch (error) {
         const result = (error as Error).message;
-        console.log(result);
       }
       setBtnTxn(false);
     }
@@ -505,7 +465,6 @@ function App() {
       checkSoyRewards();
       checkNodeByAuthority();
     }
-    console.log(chainId, account, active, library, connector);
     setBlockhainId(chainId);
   }, [account, active, chainId, library, connector]);
 
@@ -518,7 +477,7 @@ function App() {
         <div className="tabs_container">
           <div className="app_Tabs">
             <Tabs defaultActiveKey="add" id="uncontrolled-tab-example">
-              <Tab eventKey="add" title="Add A Masternode">
+              <Tab eventKey="add" title="Add a Masternode">
                 {walletConnected ? (
                   <div className="tab_content">
                     {blockchainId === chainIdEnv ? (
@@ -754,7 +713,7 @@ function App() {
                   </div>
                 )}
               </Tab>
-              <Tab eventKey="claim" title="Claim Masternode Reward">
+              <Tab eventKey="claim" title="Claim Masternode Rewards">
                 {walletConnected ? (
                   <div className="tab_content">
                     {soyRewards > 0 ? (
