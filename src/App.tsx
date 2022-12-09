@@ -105,6 +105,7 @@ function App() {
   const [nodeInactivetime, setNodeInactivetime] = useState(0);
   const [nodeAuthAddress, setNodeAuthAddress] = useState("");
   const [nodeUrl, setNodeUrl] = useState("");
+  const [unlockTime, setUnlockTime] = useState("");
 
   // function handleCloInput
   const handleCloInput = (e: any) => {
@@ -250,6 +251,10 @@ function App() {
       const nowTime = Math.floor(Date.now() / 1000);
       const diffInTime = unlockTime - nowTime;
       setNodeInactivetime(diffInTime);
+      
+      // transform unlockTime to date
+      const unlockDate = new Date(unlockTime * 1000);
+      setUnlockTime(unlockDate.toString());
     }
   };
 
@@ -832,8 +837,8 @@ function App() {
                             )
                           ) : (
                             <div className="input_red text-center">
-                              Your Masternode is not active and you have to wait{" "}
-                              {nodeInactivetime} seconds to unlock your
+                              Your Masternode is not active and you have to wait 
+                              until <span>{unlockTime}</span> seconds to unlock your
                               collateral
                             </div>
                           )}
