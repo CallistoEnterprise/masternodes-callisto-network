@@ -410,7 +410,7 @@ function App() {
       setBtnTxn(true);
       // function withdrawCollateral() external {
       const Txn = await web3MasternodeMeta.methods
-        .removeNode(account)
+        .removeNode(nodeAuthAddress)
         .send({ from: account });
       setBtnTxn(false);
     }
