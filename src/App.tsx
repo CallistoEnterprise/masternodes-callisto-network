@@ -423,7 +423,7 @@ function App() {
       setBtnTxn(true);
       // function closeNode() external {
       const Txn = await web3MasternodeMeta.methods
-        .deactivateNode(account)
+        .deactivateNode(nodeAuthAddress)
         .send({ from: account });
       setBtnTxn(false);
     }
