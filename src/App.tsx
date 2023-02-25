@@ -241,7 +241,7 @@ function App() {
       const nodAuthDetails = await web3Masternode.methods
         .getUsersNodeByOwner(account)
         .call();
-      
+
       setNodeAuthAddress(nodAuthDetails.authority);
 
       setNodeUrl(nodAuthDetails.url);
@@ -251,7 +251,7 @@ function App() {
       const nowTime = Math.floor(Date.now() / 1000);
       const diffInTime = unlockTime - nowTime;
       setNodeInactivetime(diffInTime);
-      
+
       // transform unlockTime to date
       const unlockDate = new Date(unlockTime * 1000);
       setUnlockTime(unlockDate.toString());
@@ -313,19 +313,14 @@ function App() {
     setConsoleLog("Adding Masternode in progress..");
     // function addNode(uint256 amountCLOE, uint256 amountSOY, address authority, string calldata url) external payable {
     const amountCLOE = Web3.utils.toWei(cloeAmountToAdd.toString(), "ether");
-    const amountCLOEHex = web3.utils.toBN(amountCLOE)
+    const amountCLOEHex = web3.utils.toBN(amountCLOE);
     const amountSOY = Web3.utils.toWei(soyAmountToAdd.toString(), "ether");
     const amountSOYHex = web3.utils.toBN(amountSOY);
     const amountCLO = Web3.utils.toWei(cloAmountToAdd.toString(), "ether");
     const amountCLOHex = web3.utils.toBN(amountCLO);
 
     const Txn = await web3MasternodeMeta.methods
-      .addNode(
-        amountCLOEHex,
-        amountSOYHex,
-        addressToAdd,
-        urlToAdd
-      )
+      .addNode(amountCLOEHex, amountSOYHex, addressToAdd, urlToAdd)
       .send({
         from: account,
         value: web3.utils.toHex(amountCLOHex),
@@ -376,7 +371,9 @@ function App() {
         //start the addNode transaction
         try {
           const res = await addNodeSend();
-          setConsoleLog("Masternode added successfully. It will be approved under 48 hours.");
+          setConsoleLog(
+            "Masternode added successfully. It will be approved under 48 hours."
+          );
         } catch (error) {
           const result = (error as Error).message;
           console.log("Error when adding node.");
@@ -517,8 +514,8 @@ function App() {
                       </div>
                       {!cloCheck ? (
                         <div className="input_red">
-                          The amount of CLO should be between {minCloEnv}{" "}
-                          and {maxCloEnv} CLO
+                          The amount of CLO should be between {minCloEnv} and{" "}
+                          {maxCloEnv} CLO
                         </div>
                       ) : (
                         <div className="input_info">
@@ -555,13 +552,13 @@ function App() {
                       </div>
                       {!cloeCheck ? (
                         <div className="input_red">
-                          The amount of CLOE should be between {minCloeEnv}{" "}
-                          and {maxCloeEnv} CLOE
+                          The amount of CLOE should be between {minCloeEnv} and{" "}
+                          {maxCloeEnv} CLOE
                         </div>
                       ) : (
                         <div className="input_info">
-                          The amount of CLOE to be locked (in range{" "}
-                          {minCloeEnv}-{maxCloeEnv})
+                          The amount of CLOE to be locked (in range {minCloeEnv}
+                          -{maxCloeEnv})
                         </div>
                       )}
                       <div className="input_form">
@@ -593,13 +590,13 @@ function App() {
                       </div>
                       {!soyCheck ? (
                         <div className="input_red">
-                          The amount of SOY should be between {minSoyEnv}{" "}
-                          and {maxSoyEnv} SOY
+                          The amount of SOY should be between {minSoyEnv} and{" "}
+                          {maxSoyEnv} SOY
                         </div>
                       ) : (
                         <div className="input_info">
-                          The amount of SOY to be locked (in range{" "}
-                          {minSoyEnv}-{maxSoyEnv})
+                          The amount of SOY to be locked (in range {minSoyEnv}-
+                          {maxSoyEnv})
                         </div>
                       )}
                       <div className="input_form">
@@ -736,18 +733,18 @@ function App() {
                           Earned Rewards
                         </div>
                         <div className="rewards_btn text-center">
-                        {btnTxn ? (
-                          <div className="input_group text-center">
-                            <img src={loadingGif} alt="Loading" />
-                          </div>
-                        ) : (
-                          <button
-                            className="btn_conn_wallet"
-                            onClick={onClickClaimReawrds}
-                          >
-                            Claim Rewards
-                          </button>
-                        )}
+                          {btnTxn ? (
+                            <div className="input_group text-center">
+                              <img src={loadingGif} alt="Loading" />
+                            </div>
+                          ) : (
+                            <button
+                              className="btn_conn_wallet"
+                              onClick={onClickClaimReawrds}
+                            >
+                              Claim Rewards
+                            </button>
+                          )}
                         </div>
                       </div>
                     ) : (
@@ -800,50 +797,98 @@ function App() {
                       ) : (
                         // show days and Withdraw collateral button*
                         <div>
-                        {nodeAuthAddress === "0x0000000000000000000000000000000000000000" ? (
-                          <div className="input_red text-center">
-                            Please add a masternode first
-                          </div>
-                        ) : (  
-                        <div className="active_block">
-                          {nodeInactivetime < 0 ? (
-                            nodeUrl === "" ? (
-                              <div>
-                                <div className="input_info text-center">
-                                No masternode to close
-                              </div>
-                              </div>
-                            ) : (
-                            <div>
-                              <div className="input_green text-center">
-                                Your Masternode is not active and you passed the
-                                unlock period
-                              </div>
-                              <div className="rewards_btn text-center">
-                                {btnTxn ? (
-                                  <div className="input_group text-center">
-                                    <img src={loadingGif} alt="Loading" />
+                          {nodeAuthAddress ===
+                          "0x0000000000000000000000000000000000000000" ? (
+                            <div className="input_red text-center">
+                              Please add a masternode first
+                            </div>
+                          ) : (
+                            <div className="active_block">
+                              {nodeInactivetime < 0 ? (
+                                nodeUrl === "" ? (
+                                  <div>
+                                    <div className="input_info text-center">
+                                      No masternode to close
+                                    </div>
                                   </div>
                                 ) : (
-                                  <button
-                                    className="btn_conn_wallet"
-                                    onClick={onClickWithdrawCollateral}
-                                  >
-                                    Withdraw Collateral
-                                  </button>
-                                )}
-                              </div>
-                            </div>
-                            )
-                          ) : (
-                            <div className="input_red text-center">
-                              Your Masternode is not active and you have to wait 
-                              until <span>{unlockTime}</span> seconds to unlock your
-                              collateral
+                                  <div>
+                                    <div className="input_green text-center">
+                                      Your Masternode is not active and you
+                                      passed the unlock period
+                                    </div>
+                                    <div className="rewards_btn text-center">
+                                      {btnTxn ? (
+                                        <div className="input_group text-center">
+                                          <img src={loadingGif} alt="Loading" />
+                                        </div>
+                                      ) : (
+                                        <button
+                                          className="btn_conn_wallet"
+                                          onClick={onClickWithdrawCollateral}
+                                        >
+                                          Withdraw Collateral
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                )
+                              ) : (
+                                <div className="input_red text-center">
+                                  Your Masternode is not active and you have to
+                                  wait until <span>{unlockTime}</span> seconds
+                                  to unlock your collateral
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
-                        )}
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="tab_content btnConnect_content">
+                    <div className="wallet_info">
+                      Metamask Wallet not connected
+                    </div>
+                    <div className="callet_connect">
+                      <button
+                        className="btn_conn_wallet"
+                        onClick={onClickConnect}
+                      >
+                        Connect MetaMask
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </Tab>
+
+              <Tab eventKey="fund" title="Add Fund">
+                {walletConnected ? (
+                  <div className="tab_content">
+                    <div className="input_group">
+                      <div className="rewards_info text-center">
+                        Add Fund To Your Masternode
+                      </div>
+                      {/* if mode is active then show the close button */}
+                      {nodeActiveMode ? (
+                        // Close buttonn
+                        <div className="active_block">
+                          <div className="input_red text-center">
+                            Your Masternode is active
+                          </div>
+                          <div className="rewards_btn text-center">
+                            <button
+                              className="btn_conn_wallet"
+                              onClick={onClickDesactivateMasternode}
+                            >
+                              Desactivate Masternode
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="input_red text-center">
+                          Your Masternode is not active.
                         </div>
                       )}
                     </div>
