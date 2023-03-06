@@ -937,7 +937,7 @@ function App() {
                         Add Fund To Your Masternode
                       </div>
                       {/* if mode is active then show the close button */}
-                      {!nodeActiveMode ? ( // TODO: change this to nodeActiveMode
+                      {nodeActiveMode ? (
                         <div className="tab_content">
                           {blockchainId === chainIdEnv ? (
                             <div className="input_green top_msg">
