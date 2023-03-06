@@ -489,11 +489,14 @@ function App() {
   const addTokensSend = async () => {
     setConsoleLog("Adding Masternode in progress..");
     // function addNode(uint256 amountCLOE, uint256 amountSOY, address authority, string calldata url) external payable {
-    const amountCLOE = Web3.utils.toWei(cloeAmountToAdd.toString(), "ether");
+    const amountCLOE = Web3.utils.toWei(cloeAmountToAddToken.toString(), "ether");
+    console.log("amountCLOE: ", amountCLOE);
     const amountCLOEHex = web3.utils.toBN(amountCLOE);
-    const amountSOY = Web3.utils.toWei(soyAmountToAdd.toString(), "ether");
+    const amountSOY = Web3.utils.toWei(soyAmountToAddToken.toString(), "ether");
+    console.log("amountSOY: ", amountSOY);
     const amountSOYHex = web3.utils.toBN(amountSOY);
-    const amountCLO = Web3.utils.toWei(cloAmountToAdd.toString(), "ether");
+    const amountCLO = Web3.utils.toWei(cloAmountToAddToken.toString(), "ether");
+    console.log("amountCLO: ", amountCLO);
     const amountCLOHex = web3.utils.toBN(amountCLO);
 
     const Txn = await web3MasternodeMeta.methods
