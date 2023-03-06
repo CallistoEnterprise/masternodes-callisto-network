@@ -78,15 +78,18 @@ function App() {
   // CLO
   const [cloAmount, setCloAmount] = useState(0);
   const [cloAmountToAdd, setCloAmountToAdd] = useState(0);
+  const [cloAmountToAddToken, setCloAmountToAddToken] = useState(0);
   const [cloCheck, setCloCheck] = useState(true);
   // CLOE
   const [cloeAmount, setCloeAmount] = useState(0);
   const [cloeAmountToAdd, setCloeAmountToAdd] = useState(0);
+  const [cloeAmountToAddToken, setCloeAmountToAddToken] = useState(0);
   const [cloeCheck, setCloeCheck] = useState(true);
   const [cloeApproved, setCloeApproved] = useState(true);
   // SOY
   const [soyAmount, setSoyAmount] = useState(0);
   const [soyAmountToAdd, setSoyAmountToAdd] = useState(0);
+  const [soyAmountToAddToken, setSoyAmountToAddToken] = useState(0);
   const [soyCheck, setSoyCheck] = useState(true);
   const [soyApproved, setSoyApproved] = useState(true);
   // Address
@@ -120,6 +123,12 @@ function App() {
     setCloAmountToAdd(e.target.value);
   };
 
+  // function handleCloInputAddToken
+  const handleCloInputAddToken = (e: any) => {
+    // check if the input value is in range of 500k and 5M
+    setCloAmountToAddToken(e.target.value);
+  };
+
   // function handleCloeInput
   const handleCloeInput = (e: any) => {
     // check if the input value is in range of 500k and 5M
@@ -131,6 +140,13 @@ function App() {
       setCloeCheck(false);
     }
     setCloeAmountToAdd(e.target.value);
+    checkCloeApproved(e.target.value);
+  };
+
+  // function handleCloeInputAddToken
+  const handleCloeInputAddToken = (e: any) => {
+    // check if the input value is in range of 500k and 5M
+    setCloeAmountToAddToken(e.target.value);
     checkCloeApproved(e.target.value);
   };
 
@@ -148,12 +164,19 @@ function App() {
     checkSoyApproved(e.target.value);
   };
 
-  // function handleSoyInput
+  // function handleSoyInputAddToken
+  const handleSoyInputAddToken = (e: any) => {
+    // check if the input value is in range of 500k and 5M
+    setSoyAmountToAddToken(e.target.value);
+    checkSoyApproved(e.target.value);
+  };
+
+  // function handleAddressInput
   const handleAddressInput = (e: any) => {
     setAddressToAdd(e.target.value);
   };
 
-  // function handleSoyInput
+  // function handleUrlInput
   const handleUrlInput = (e: any) => {
     setUrlToAdd(e.target.value);
   };
@@ -453,6 +476,49 @@ function App() {
         setSoyApproved(true);
       } catch (error) {
         const result = (error as Error).message;
+      }
+      setBtnTxn(false);
+    }
+  };
+
+  /* ************* */
+  /*  Add Fund     */
+  /* ************* */
+
+  // function addTokens(uint256 amountCLOE, uint256 amountSOY) external payable
+  const addTokensSend = async () => {
+    setConsoleLog("Adding Masternode in progress..");
+    // function addNode(uint256 amountCLOE, uint256 amountSOY, address authority, string calldata url) external payable {
+    const amountCLOE = Web3.utils.toWei(cloeAmountToAdd.toString(), "ether");
+    const amountCLOEHex = web3.utils.toBN(amountCLOE);
+    const amountSOY = Web3.utils.toWei(soyAmountToAdd.toString(), "ether");
+    const amountSOYHex = web3.utils.toBN(amountSOY);
+    const amountCLO = Web3.utils.toWei(cloAmountToAdd.toString(), "ether");
+    const amountCLOHex = web3.utils.toBN(amountCLO);
+
+    const Txn = await web3MasternodeMeta.methods
+      .addTokens(amountCLOEHex, amountSOYHex)
+      .send({
+        from: account,
+        value: web3.utils.toHex(amountCLOHex),
+      });
+    return Txn;
+  };
+
+  // onClickAddFunc function
+  const onClickAddTokens = async () => {
+    if (active) {
+      setConsoleLog("Add Fund Operation started..");
+      setBtnTxn(true);
+
+      //start the addNode transaction
+      try {
+        const res = await addTokensSend();
+        setConsoleLog("Fund added successfully.");
+      } catch (error) {
+        const result = (error as Error).message;
+        console.log("Error when adding fund.");
+        setConsoleLog(result);
       }
       setBtnTxn(false);
     }
@@ -871,20 +937,137 @@ function App() {
                         Add Fund To Your Masternode
                       </div>
                       {/* if mode is active then show the close button */}
-                      {nodeActiveMode ? (
-                        // Close buttonn
-                        <div className="active_block">
-                          <div className="input_red text-center">
-                            Your Masternode is active
+                      {!nodeActiveMode ? ( // TODO: change this to nodeActiveMode
+                        <div className="tab_content">
+                          {blockchainId === chainIdEnv ? (
+                            <div className="input_green top_msg">
+                              &#9673; You are connected to Callisto Network
+                              Blockchain
+                              {chainIdEnv === 820 ? " (Mainnet)" : " (Testnet)"}
+                            </div>
+                          ) : (
+                            <div className="input_red top_msg">
+                              &#9673; You are not connected to Callisto Network
+                              Blockchain
+                            </div>
+                          )}
+
+                          {/* ClO amount Input */}
+                          <div className="input_group">
+                            <div className="input_topGroup">
+                              <div className="input_title">CLO amount: </div>
+                              <span className="amount_title">
+                                <span className="input_green">
+                                  ({cloAmount} CLO in your wallet)
+                                </span>
+                              </span>
+                            </div>
+
+                            <div className="input_form">
+                              <input
+                                type="text"
+                                placeholder="CLO amount"
+                                onChange={handleCloInputAddToken}
+                                autoComplete="off"
+                                value={cloAmountToAddToken}
+                              />
+                            </div>
                           </div>
-                          <div className="rewards_btn text-center">
-                            <button
-                              className="btn_conn_wallet"
-                              onClick={onClickDesactivateMasternode}
-                            >
-                              Desactivate Masternode
-                            </button>
+
+                          {/* ClOE amount Input */}
+                          <div className="input_group">
+                            <div className="input_topGroup">
+                              <div className="input_title">CLOE amount: </div>
+                              <span className="amount_title">
+                                <span className="input_green">
+                                  ({cloeAmount} CLOE in your wallet)
+                                </span>
+                              </span>
+                            </div>
+
+                            <div className="input_form">
+                              <input
+                                type="text"
+                                placeholder="CLOE amount"
+                                onChange={handleCloeInputAddToken}
+                                autoComplete="off"
+                                value={cloeAmountToAddToken}
+                              />
+                            </div>
                           </div>
+
+                          {/* SOY amount Input */}
+                          <div className="input_group">
+                            <div className="input_topGroup">
+                              <div className="input_title">SOY amount: </div>
+                              <span className="amount_title">
+                                <span className="input_green">
+                                  ({soyAmount} SOY in your wallet)
+                                </span>
+                              </span>
+                            </div>
+
+                            <div className="input_form">
+                              <input
+                                type="text"
+                                placeholder="SOY amount"
+                                onChange={handleSoyInputAddToken}
+                                autoComplete="off"
+                                value={soyAmountToAddToken}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Submit Buttons */}
+                          {btnTxn ? (
+                            <div className="input_group text-center">
+                              <img src={loadingGif} alt="Loading" />
+                            </div>
+                          ) : (
+                            <div className="input_group text-center">
+                              <div className="input_topGroup">
+                                {btnAddMasternode ? (
+                                  <div>&nbsp;</div>
+                                ) : (
+                                  <div className="input_red">
+                                    Please fill all the form
+                                  </div>
+                                )}
+                              </div>
+                              <div className="enable_group">
+                                {/* Check if CLOE amount is approved*/}
+                                {!cloeApproved ? (
+                                  <button
+                                    className="enable_btn"
+                                    onClick={onClickEnableCloe}
+                                  >
+                                    Enable CLOE
+                                  </button>
+                                ) : (
+                                  <div></div>
+                                )}
+                                {/* Check if SOY amount is approved*/}
+                                {!soyApproved ? (
+                                  <button
+                                    className="enable_btn"
+                                    onClick={onClickEnableSoy}
+                                  >
+                                    Enable SOY
+                                  </button>
+                                ) : (
+                                  <div></div>
+                                )}
+                              </div>
+                              <button
+                                className="btn_conn_wallet"
+                                onClick={onClickAddTokens}
+                                disabled={!soyApproved || !cloeApproved}
+                              >
+                                Add more Funbd
+                              </button>
+                              <div className="input_info">{consoleLog}</div>
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <div className="input_red text-center">

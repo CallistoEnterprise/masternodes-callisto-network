@@ -167,6 +167,46 @@
     "anonymous": false
   },
   {
+    "type": "event",
+    "name": "TokensAdded",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "authority",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "tuple",
+        "name": "node",
+        "internalType": "struct MasterNodes.Node",
+        "indexed": false,
+        "components": [
+          { "type": "address", "name": "owner", "internalType": "address" },
+          { "type": "bool", "name": "isActive", "internalType": "bool" },
+          { "type": "uint8", "name": "isUser", "internalType": "uint8" },
+          {
+            "type": "uint256[3]",
+            "name": "balances",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256[3]",
+            "name": "rewardPerShares",
+            "internalType": "uint256[3]"
+          },
+          {
+            "type": "uint256",
+            "name": "unlockTime",
+            "internalType": "uint256"
+          },
+          { "type": "string", "name": "url", "internalType": "string" }
+        ]
+      }
+    ],
+    "anonymous": false
+  },
+  {
     "type": "function",
     "stateMutability": "view",
     "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
@@ -206,6 +246,25 @@
       { "type": "uint256", "name": "amountSOY", "internalType": "uint256" },
       { "type": "address", "name": "authority", "internalType": "address" },
       { "type": "string", "name": "url", "internalType": "string" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "addRewardToUsersPool",
+    "inputs": [
+      { "type": "uint256", "name": "amountSOY", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "payable",
+    "outputs": [],
+    "name": "addTokens",
+    "inputs": [
+      { "type": "uint256", "name": "amountCLOE", "internalType": "uint256" },
+      { "type": "uint256", "name": "amountSOY", "internalType": "uint256" }
     ]
   },
   {
@@ -513,6 +572,13 @@
     "stateMutability": "view",
     "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
     "name": "owner",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "pendingCallistoReward",
     "inputs": []
   },
   {
