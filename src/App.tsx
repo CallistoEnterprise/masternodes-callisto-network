@@ -375,6 +375,30 @@ function App() {
     return Txn;
   };
 
+  const approveCloeAddToken = async () => {
+    // Start the token amount approval for CLOE
+    setConsoleLog("CLOE approval in progress..");
+    const cloeAmountInWei = Web3.utils.toWei(
+      cloeAmountToAddToken.toString(),
+      "ether"
+    );
+    const Txn = await web3CLOEMeta.methods
+      .approve(MasternodeAddressEnv, cloeAmountInWei)
+      .send({ from: account });
+    setConsoleLog("CLOE token amount approved..");
+    return Txn;
+  };
+
+  const approveSoyAddToken = async () => {
+    setConsoleLog("SOY approval in progress..");
+    const soyAmountInWei = Web3.utils.toWei(soyAmountToAddToken.toString(), "ether");
+    const Txn = await web3SOYMeta.methods
+      .approve(MasternodeAddressEnv, soyAmountInWei)
+      .send({ from: account });
+    setConsoleLog("SOY token amount approved..");
+    return Txn;
+  };
+
   // onClickAddMasternode function
   const onClickAddMasternode = async () => {
     // check if innput value are not empty
@@ -473,6 +497,38 @@ function App() {
       // Start the token amount approval for SOY
       try {
         const res = await approveSoy();
+        setSoyApproved(true);
+      } catch (error) {
+        const result = (error as Error).message;
+      }
+      setBtnTxn(false);
+    }
+  };
+
+  const onClickEnableCloeAddtoken = async () => {
+    // check if the wallet is connected
+    if (active) {
+      setConsoleLog("Enable CLOE operation started..");
+      setBtnTxn(true);
+      // Start the token amount approval for CLOE
+      try {
+        const res = await approveCloeAddToken();
+        setCloeApproved(true);
+      } catch (error) {
+        const result = (error as Error).message;
+      }
+      setBtnTxn(false);
+    }
+  };
+
+  const onClickEnableSoyAddToken = async () => {
+    // check if the wallet is connected
+    if (active) {
+      setConsoleLog("Enable SOY operation started..");
+      setBtnTxn(true);
+      // Start the token amount approval for SOY
+      try {
+        const res = await approveSoyAddToken();
         setSoyApproved(true);
       } catch (error) {
         const result = (error as Error).message;
