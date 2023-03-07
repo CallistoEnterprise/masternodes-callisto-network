@@ -80,18 +80,21 @@ function App() {
   const [cloAmountToAdd, setCloAmountToAdd] = useState(0);
   const [cloAmountToAddToken, setCloAmountToAddToken] = useState(0);
   const [cloCheck, setCloCheck] = useState(true);
+  const [cloAmountPossible, setCloAmountPossible] = useState(0);
   // CLOE
   const [cloeAmount, setCloeAmount] = useState(0);
   const [cloeAmountToAdd, setCloeAmountToAdd] = useState(0);
   const [cloeAmountToAddToken, setCloeAmountToAddToken] = useState(0);
   const [cloeCheck, setCloeCheck] = useState(true);
   const [cloeApproved, setCloeApproved] = useState(true);
+  const [cloeAmountPossible, setCloeAmountPossible] = useState(0);
   // SOY
   const [soyAmount, setSoyAmount] = useState(0);
   const [soyAmountToAdd, setSoyAmountToAdd] = useState(0);
   const [soyAmountToAddToken, setSoyAmountToAddToken] = useState(0);
   const [soyCheck, setSoyCheck] = useState(true);
   const [soyApproved, setSoyApproved] = useState(true);
+  const [soyAmountPossible, setSoyAmountPossible] = useState(0);
   // Address
   const [addressToAdd, setAddressToAdd] = useState("");
   // Url
@@ -257,13 +260,25 @@ function App() {
     // check if the wallet is connected
     if (active) {
       const nodeDetails = await web3Masternode.methods
-        .getNodeByAuthority(account)
+        .getNodeByAuthority(account) 
         .call();
 
       // getUsersNodeByOwner
       const nodAuthDetails = await web3Masternode.methods
         .getUsersNodeByOwner(account)
         .call();
+
+      // Max amount possible in CLO
+      const cloAmountPossible = maxCloEnv - Number(ethers.utils.formatEther(nodAuthDetails[0].balances[0]));
+      setCloAmountPossible(cloAmountPossible);
+
+      // Max amount possible in CLOE
+      const cloeAmountPossible = maxCloeEnv - Number(ethers.utils.formatEther(nodAuthDetails[0].balances[1]));
+      setCloeAmountPossible(cloeAmountPossible);
+
+      // Max amount possible in SOY
+      const soyAmountPossible = maxSoyEnv - Number(ethers.utils.formatEther(nodAuthDetails[0].balances[2]));
+      setSoyAmountPossible(soyAmountPossible);
 
       setNodeAuthAddress(nodAuthDetails.authority);
 
@@ -996,7 +1011,7 @@ function App() {
                         Add Fund To Your Masternode
                       </div>
                       {/* if mode is active then show the close button */}
-                      {nodeActiveMode ? (
+                      {nodeActiveMode ? ( 
                         <div className="tab_content">
                           {blockchainId === chainIdEnv ? (
                             <div className="input_green top_msg">
@@ -1021,7 +1036,9 @@ function App() {
                                 </span>
                               </span>
                             </div>
-
+                            <div className="input_info">
+                              Maximum amount that can be added: {cloAmountPossible}
+                            </div>
                             <div className="input_form">
                               <input
                                 type="text"
@@ -1043,7 +1060,9 @@ function App() {
                                 </span>
                               </span>
                             </div>
-
+                            <div className="input_info">
+                              Maximum amount that can be added: {cloeAmountPossible}
+                            </div>
                             <div className="input_form">
                               <input
                                 type="text"
@@ -1065,7 +1084,9 @@ function App() {
                                 </span>
                               </span>
                             </div>
-
+                            <div className="input_info">
+                              Maximum amount that can be added: {soyAmountPossible}
+                            </div>
                             <div className="input_form">
                               <input
                                 type="text"
@@ -1098,7 +1119,7 @@ function App() {
                                 {!cloeApproved ? (
                                   <button
                                     className="enable_btn"
-                                    onClick={onClickEnableCloe}
+                                    onClick={onClickEnableCloeAddtoken}
                                   >
                                     Enable CLOE
                                   </button>
@@ -1109,7 +1130,7 @@ function App() {
                                 {!soyApproved ? (
                                   <button
                                     className="enable_btn"
-                                    onClick={onClickEnableSoy}
+                                    onClick={onClickEnableSoyAddToken}
                                   >
                                     Enable SOY
                                   </button>
