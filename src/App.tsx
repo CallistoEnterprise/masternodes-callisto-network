@@ -260,13 +260,25 @@ function App() {
     // check if the wallet is connected
     if (active) {
       const nodeDetails = await web3Masternode.methods
-        .getNodeByAuthority(account)
+        .getNodeByAuthority(account) 
         .call();
 
       // getUsersNodeByOwner
       const nodAuthDetails = await web3Masternode.methods
         .getUsersNodeByOwner(account)
         .call();
+
+      // Max amount possible in CLO
+      const cloAmountPossible = maxCloEnv - Number(ethers.utils.formatEther(nodAuthDetails[0].balances[0]));
+      setCloAmountPossible(cloAmountPossible);
+
+      // Max amount possible in CLOE
+      const cloeAmountPossible = maxCloeEnv - Number(ethers.utils.formatEther(nodAuthDetails[0].balances[1]));
+      setCloeAmountPossible(cloeAmountPossible);
+
+      // Max amount possible in SOY
+      const soyAmountPossible = maxSoyEnv - Number(ethers.utils.formatEther(nodAuthDetails[0].balances[2]));
+      setSoyAmountPossible(soyAmountPossible);
 
       setNodeAuthAddress(nodAuthDetails.authority);
 
@@ -586,18 +598,6 @@ function App() {
     }
   };
 
-  /* ******************* */
-  /*  check Max Amount   */
-  /* ******************* */
-
-  const checkMaxAmount = async () => {
-
-    // setCloAmountPossible(value);
-    // setCloeAmountPossible(value);
-    // setSoyAmountPossible(value);
-
-  };
-
   useEffect(() => {
     if (account) {
       setUserWallet(account);
@@ -608,9 +608,6 @@ function App() {
       checkWalletBalanceSoy();
       checkSoyRewards();
       checkNodeByAuthority();
-
-      // check maximum amount that can be added
-      checkMaxAmount();
     }
     setBlockhainId(chainId);
   }, [account, active, chainId, library, connector]);
@@ -1014,7 +1011,7 @@ function App() {
                         Add Fund To Your Masternode
                       </div>
                       {/* if mode is active then show the close button */}
-                      { nodeActiveMode ? ( // TODO: desactivate
+                      {nodeActiveMode ? ( 
                         <div className="tab_content">
                           {blockchainId === chainIdEnv ? (
                             <div className="input_green top_msg">
@@ -1040,7 +1037,7 @@ function App() {
                               </span>
                             </div>
                             <div className="input_info">
-                              Maximum amount that can be added: --- 
+                              Maximum amount that can be added: {cloAmountPossible}
                             </div>
                             <div className="input_form">
                               <input
@@ -1064,7 +1061,7 @@ function App() {
                               </span>
                             </div>
                             <div className="input_info">
-                              Maximum amount that can be added: --- 
+                              Maximum amount that can be added: {cloeAmountPossible}
                             </div>
                             <div className="input_form">
                               <input
@@ -1088,7 +1085,7 @@ function App() {
                               </span>
                             </div>
                             <div className="input_info">
-                              Maximum amount that can be added: --- 
+                              Maximum amount that can be added: {soyAmountPossible}
                             </div>
                             <div className="input_form">
                               <input
