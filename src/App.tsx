@@ -19,6 +19,9 @@ import abi_masternode from "./abis/masternode.json";
 // Images
 import soyImg from "./assets/soy.png";
 import loadingGif from "./assets/loading.gif";
+import stat_clo from "./assets/stat_clo.png";
+import stat_cloe from "./assets/stat_cloe.png";
+import stat_soy from "./assets/stat_soy.png";
 
 // vars from env file
 const chainIdEnv = Number(process.env.REACT_APP_CHAIN_ID);
@@ -81,6 +84,7 @@ function App() {
   const [cloAmountToAddToken, setCloAmountToAddToken] = useState(0);
   const [cloCheck, setCloCheck] = useState(true);
   const [cloAmountPossible, setCloAmountPossible] = useState(0);
+  const [cloMnBalance, setCloMnBalance] = useState(0);
   // CLOE
   const [cloeAmount, setCloeAmount] = useState(0);
   const [cloeAmountToAdd, setCloeAmountToAdd] = useState(0);
@@ -88,6 +92,7 @@ function App() {
   const [cloeCheck, setCloeCheck] = useState(true);
   const [cloeApproved, setCloeApproved] = useState(true);
   const [cloeAmountPossible, setCloeAmountPossible] = useState(0);
+  const [cloeMnBalance, setCloeMnBalance] = useState(0);
   // SOY
   const [soyAmount, setSoyAmount] = useState(0);
   const [soyAmountToAdd, setSoyAmountToAdd] = useState(0);
@@ -95,6 +100,7 @@ function App() {
   const [soyCheck, setSoyCheck] = useState(true);
   const [soyApproved, setSoyApproved] = useState(true);
   const [soyAmountPossible, setSoyAmountPossible] = useState(0);
+  const [soyMnBalance, setSoyMnBalance] = useState(0);
   // Address
   const [addressToAdd, setAddressToAdd] = useState("");
   // Url
@@ -265,20 +271,23 @@ function App() {
 
       // getUsersNodeByOwner
       const nodAuthDetails = await web3Masternode.methods
-        .getUsersNodeByOwner(account)
+        .getUsersNodeByOwner("0x550d599c0b743425097d544664c737933d213a12")  // tODO: change to account
         .call();
 
       // Max amount possible in CLO
       const cloAmountPossible = maxCloEnv - Number(ethers.utils.formatEther(nodAuthDetails[0].balances[0]));
       setCloAmountPossible(cloAmountPossible);
+      setCloMnBalance(Number(ethers.utils.formatEther(nodAuthDetails[0].balances[0])));
 
       // Max amount possible in CLOE
       const cloeAmountPossible = maxCloeEnv - Number(ethers.utils.formatEther(nodAuthDetails[0].balances[1]));
       setCloeAmountPossible(cloeAmountPossible);
+      setCloeMnBalance(Number(ethers.utils.formatEther(nodAuthDetails[0].balances[1])));
 
       // Max amount possible in SOY
       const soyAmountPossible = maxSoyEnv - Number(ethers.utils.formatEther(nodAuthDetails[0].balances[2]));
       setSoyAmountPossible(soyAmountPossible);
+      setSoyMnBalance(Number(ethers.utils.formatEther(nodAuthDetails[0].balances[2])));
 
       setNodeAuthAddress(nodAuthDetails.authority);
 
@@ -620,8 +629,96 @@ function App() {
         </div>
         <div className="tabs_container">
           <div className="app_Tabs">
-            <Tabs defaultActiveKey="add" id="uncontrolled-tab-example">
-              <Tab eventKey="add" title="Add a Masternode">
+            <Tabs defaultActiveKey="stats" id="uncontrolled-tab-example">
+
+              <Tab eventKey="stats" title="Masternode Stats">
+                {walletConnected ? (
+                  <div className="tab_content">
+                    <div className="input_group">
+                      <div className="rewards_info text-center">
+                        Your Masternode Stats
+                      </div>
+                      {/* if mode is active then show the close button */}
+                      { nodeActiveMode ? (  // TODO: change to nodeActiveMode
+                        <div className="tab_content">
+                          {blockchainId === chainIdEnv ? (
+                            <div className="input_green top_msg">
+                              &#9673; You are connected to Callisto Network
+                              Blockchain
+                              {chainIdEnv === 820 ? " (Mainnet)" : " (Testnet)"}
+                            </div>
+                          ) : (
+                            <div className="input_red top_msg">
+                              &#9673; You are not connected to Callisto Network
+                              Blockchain
+                            </div>
+                          )}
+
+                          <div className="statsContaiber">
+
+                            <div className="StatsBottom">
+                              <div className="Stat">
+                                <div className="statImage">
+                                  <img src={stat_clo} alt="CLO" />
+                                </div>
+                                <div className="StatTop">
+                                  Your CLO
+                                </div>
+                                <div className="StatBottom">
+                                  {cloMnBalance}
+                                </div>
+                              </div>
+                              <div className="Stat">
+                              <div className="statImage">
+                                  <img src={stat_cloe} alt="CLO" />
+                                </div>
+                                <div className="StatTop">
+                                  Your CLOE
+                                  </div>
+                                <div className="StatBottom">
+                                  {cloeMnBalance}
+                                  </div>
+                              </div>
+                              <div className="Stat">
+                              <div className="statImage">
+                                  <img src={stat_soy} alt="CLO" />
+                                </div>
+                                <div className="StatTop">
+                                  Your SOY
+                                  </div>
+                                <div className="StatBottom">
+                                  {soyMnBalance}
+                                  </div>
+                                  </div>
+                            </div>
+                          </div> 
+
+                        </div>
+                      ) : (
+                        <div className="input_red text-center">
+                          Your Masternode is not active.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="tab_content btnConnect_content">
+                    <div className="wallet_info">
+                      Metamask Wallet not connected
+                    </div>
+                    <div className="callet_connect">
+                      <button
+                        className="btn_conn_wallet"
+                        onClick={onClickConnect}
+                      >
+                        Connect MetaMask
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </Tab>
+
+              <Tab eventKey="add" title="Set up a Node">
                 {walletConnected ? (
                   <div className="tab_content">
                     {blockchainId === chainIdEnv ? (
@@ -857,153 +954,8 @@ function App() {
                   </div>
                 )}
               </Tab>
-              <Tab eventKey="claim" title="Claim Masternode Rewards">
-                {walletConnected ? (
-                  <div className="tab_content">
-                    {soyRewards > 0 ? (
-                      <div className="input_group">
-                        <div className="rewards_amount">
-                          <div className="soy_amount_rew">{soyRewards}</div>
-                          <div className="soy_txt_rew">SOY</div>
-                          <div className="soy_img_rew">
-                            <img src={soyImg} alt="soy" />
-                          </div>
-                        </div>
-                        <div className="rewards_info text-center">
-                          Earned Rewards
-                        </div>
-                        <div className="rewards_btn text-center">
-                          {btnTxn ? (
-                            <div className="input_group text-center">
-                              <img src={loadingGif} alt="Loading" />
-                            </div>
-                          ) : (
-                            <button
-                              className="btn_conn_wallet"
-                              onClick={onClickClaimReawrds}
-                            >
-                              Claim Rewards
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="input_group">
-                        <div className="rewards_info text-center">
-                          You don't have any rewards to claim
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="tab_content btnConnect_content">
-                    <div className="wallet_info">
-                      Metamask Wallet not connected
-                    </div>
-                    <div className="callet_connect">
-                      <button
-                        className="btn_conn_wallet"
-                        onClick={onClickConnect}
-                      >
-                        Connect MetaMask
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </Tab>
-              <Tab eventKey="close" title="Close a Masternode">
-                {walletConnected ? (
-                  <div className="tab_content">
-                    <div className="input_group">
-                      <div className="rewards_info text-center">
-                        Close Masternode
-                      </div>
-                      {/* if mode is active then show the close button */}
-                      {nodeActiveMode ? (
-                        // Close buttonn
-                        <div className="active_block">
-                          <div className="input_red text-center">
-                            Your Masternode is active
-                          </div>
-                          <div className="rewards_btn text-center">
-                            <button
-                              className="btn_conn_wallet"
-                              onClick={onClickDesactivateMasternode}
-                            >
-                              Desactivate Masternode
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        // show days and Withdraw collateral button*
-                        <div>
-                          {nodeAuthAddress ===
-                          "0x0000000000000000000000000000000000000000" ? (
-                            <div className="input_red text-center">
-                              Please add a masternode first
-                            </div>
-                          ) : (
-                            <div className="active_block">
-                              {nodeInactivetime < 0 ? (
-                                nodeUrl === "" ? (
-                                  <div>
-                                    <div className="input_info text-center">
-                                      No masternode to close
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <div className="input_green text-center">
-                                      Your Masternode is not active and you
-                                      passed the unlock period
-                                    </div>
-                                    <div className="rewards_btn text-center">
-                                      {btnTxn ? (
-                                        <div className="input_group text-center">
-                                          <img src={loadingGif} alt="Loading" />
-                                        </div>
-                                      ) : (
-                                        <button
-                                          className="btn_conn_wallet"
-                                          onClick={onClickWithdrawCollateral}
-                                        >
-                                          Withdraw Collateral
-                                        </button>
-                                      )}
-                                    </div>
-                                  </div>
-                                )
-                              ) : (
-                                <div className="input_red text-center">
-                                  Your Masternode is not active and you have to
-                                  wait until <span>{unlockTime}</span> seconds
-                                  to unlock your collateral
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="tab_content btnConnect_content">
-                    <div className="wallet_info">
-                      Metamask Wallet not connected
-                    </div>
-                    <div className="callet_connect">
-                      <button
-                        className="btn_conn_wallet"
-                        onClick={onClickConnect}
-                      >
-                        Connect MetaMask
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </Tab>
 
-              <Tab eventKey="fund" title="Add Fund">
+              <Tab eventKey="fund" title="Add Funds">
                 {walletConnected ? (
                   <div className="tab_content">
                     <div className="input_group">
@@ -1172,6 +1124,159 @@ function App() {
                   </div>
                 )}
               </Tab>
+              
+              <Tab eventKey="claim" title="Claim reward">
+                {walletConnected ? (
+                  <div className="tab_content">
+                    {soyRewards > 0 ? (
+                      <div className="input_group">
+                        <div className="rewards_amount">
+                          <div className="soy_amount_rew">{soyRewards}</div>
+                          <div className="soy_txt_rew">SOY</div>
+                          <div className="soy_img_rew">
+                            <img src={soyImg} alt="soy" />
+                          </div>
+                        </div>
+                        <div className="rewards_info text-center">
+                          Earned Rewards
+                        </div>
+                        <div className="rewards_btn text-center">
+                          {btnTxn ? (
+                            <div className="input_group text-center">
+                              <img src={loadingGif} alt="Loading" />
+                            </div>
+                          ) : (
+                            <button
+                              className="btn_conn_wallet"
+                              onClick={onClickClaimReawrds}
+                            >
+                              Claim Rewards
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="input_group">
+                        <div className="rewards_info text-center">
+                          You don't have any rewards to claim
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="tab_content btnConnect_content">
+                    <div className="wallet_info">
+                      Metamask Wallet not connected
+                    </div>
+                    <div className="callet_connect">
+                      <button
+                        className="btn_conn_wallet"
+                        onClick={onClickConnect}
+                      >
+                        Connect MetaMask
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </Tab>
+
+              <Tab eventKey="close" title="Close Masternode">
+                {walletConnected ? (
+                  <div className="tab_content">
+                    <div className="input_group">
+                      <div className="rewards_info text-center">
+                        Close Masternode
+                      </div>
+                      {/* if mode is active then show the close button */}
+                      {nodeActiveMode ? (
+                        // Close buttonn
+                        <div className="active_block">
+                          <div className="input_red text-center">
+                            Your Masternode is active
+                          </div>
+                          <div className="rewards_btn text-center">
+                            <button
+                              className="btn_conn_wallet"
+                              onClick={onClickDesactivateMasternode}
+                            >
+                              Desactivate Masternode
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        // show days and Withdraw collateral button*
+                        <div>
+                          {nodeAuthAddress ===
+                          "0x0000000000000000000000000000000000000000" ? (
+                            <div className="input_red text-center">
+                              Please add a masternode first
+                            </div>
+                          ) : (
+                            <div className="active_block">
+                              {nodeInactivetime < 0 ? (
+                                nodeUrl === "" ? (
+                                  <div>
+                                    <div className="input_info text-center">
+                                      No masternode to close
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <div className="input_green text-center">
+                                      Your Masternode is not active and you
+                                      passed the unlock period
+                                    </div>
+                                    <div className="rewards_btn text-center">
+                                      {btnTxn ? (
+                                        <div className="input_group text-center">
+                                          <img src={loadingGif} alt="Loading" />
+                                        </div>
+                                      ) : (
+                                        <button
+                                          className="btn_conn_wallet"
+                                          onClick={onClickWithdrawCollateral}
+                                        >
+                                          Withdraw Collateral
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                )
+                              ) : (
+                                <div className="input_red text-center">
+                                  Your Masternode is not active and you have to
+                                  wait until <span>{unlockTime}</span> seconds
+                                  to unlock your collateral
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="tab_content btnConnect_content">
+                    <div className="wallet_info">
+                      Metamask Wallet not connected
+                    </div>
+                    <div className="callet_connect">
+                      <button
+                        className="btn_conn_wallet"
+                        onClick={onClickConnect}
+                      >
+                        Connect MetaMask
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </Tab>
+
+              
+
+              
+
+
             </Tabs>
           </div>
         </div>
