@@ -271,7 +271,7 @@ function App() {
 
       // getUsersNodeByOwner
       const nodAuthDetails = await web3Masternode.methods
-        .getUsersNodeByOwner("0x550d599c0b743425097d544664c737933d213a12")  // tODO: change to account
+        .getUsersNodeByOwner(account)
         .call();
 
       // Max amount possible in CLO
