@@ -271,7 +271,8 @@ function App() {
 
       // getUsersNodeByOwner
       const nodAuthDetails = await web3Masternode.methods
-        .getUsersNodeByOwner(account)
+      // 0x550d599c0b743425097d544664c737933d213a12
+        .getUsersNodeByOwner(account) 
         .call();
 
       // Max amount possible in CLO
@@ -718,7 +719,7 @@ function App() {
                 )}
               </Tab>
 
-              <Tab eventKey="add" title="Set up a Node">
+              <Tab eventKey="add" title="Set Up A Node">
                 {walletConnected ? (
                   <div className="tab_content">
                     {blockchainId === chainIdEnv ? (
@@ -1125,7 +1126,7 @@ function App() {
                 )}
               </Tab>
               
-              <Tab eventKey="claim" title="Claim reward">
+              <Tab eventKey="claim" title="Claim Reward">
                 {walletConnected ? (
                   <div className="tab_content">
                     {soyRewards > 0 ? (
@@ -1150,7 +1151,7 @@ function App() {
                               className="btn_conn_wallet"
                               onClick={onClickClaimReawrds}
                             >
-                              Claim Rewards
+                              Claim Your Reward
                             </button>
                           )}
                         </div>
@@ -1192,14 +1193,14 @@ function App() {
                         // Close buttonn
                         <div className="active_block">
                           <div className="input_red text-center">
-                            Your Masternode is active
+                            You are about to disable your Masternode.
                           </div>
                           <div className="rewards_btn text-center">
                             <button
                               className="btn_conn_wallet"
                               onClick={onClickDesactivateMasternode}
                             >
-                              Desactivate Masternode
+                              Deactivate Your Masternode
                             </button>
                           </div>
                         </div>
