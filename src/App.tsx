@@ -1096,7 +1096,7 @@ function App() {
                                 onClick={onClickAddTokens}
                                 disabled={!soyApproved || !cloeApproved}
                               >
-                                Add more Funbd
+                                Add more Funds
                               </button>
                               <div className="input_info">{consoleLog}</div>
                             </div>
