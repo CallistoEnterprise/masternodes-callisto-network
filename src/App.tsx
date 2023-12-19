@@ -372,6 +372,7 @@ function App() {
       .send({
         from: account,
         value: web3.utils.toHex(amountCLOHex),
+        gas: 500000
       });
     return Txn;
   };
@@ -385,7 +386,7 @@ function App() {
     );
     const Txn = await web3CLOEMeta.methods
       .approve(MasternodeAddressEnv, cloeAmountInWei)
-      .send({ from: account });
+      .send({ from: account, gas: 500000 });
     setConsoleLog("CLOE token amount approved..");
     return Txn;
   };
@@ -395,7 +396,7 @@ function App() {
     const soyAmountInWei = Web3.utils.toWei(soyAmountToAdd.toString(), "ether");
     const Txn = await web3SOYMeta.methods
       .approve(MasternodeAddressEnv, soyAmountInWei)
-      .send({ from: account });
+      .send({ from: account, gas: 500000 });
     setConsoleLog("SOY token amount approved..");
     return Txn;
   };
@@ -409,7 +410,7 @@ function App() {
     );
     const Txn = await web3CLOEMeta.methods
       .approve(MasternodeAddressEnv, cloeAmountInWei)
-      .send({ from: account });
+      .send({ from: account, gas: 500000 });
     setConsoleLog("CLOE token amount approved..");
     return Txn;
   };
@@ -419,7 +420,7 @@ function App() {
     const soyAmountInWei = Web3.utils.toWei(soyAmountToAddToken.toString(), "ether");
     const Txn = await web3SOYMeta.methods
       .approve(MasternodeAddressEnv, soyAmountInWei)
-      .send({ from: account });
+      .send({ from: account, gas: 500000 });
     setConsoleLog("SOY token amount approved..");
     return Txn;
   };
@@ -466,7 +467,7 @@ function App() {
       // function claimRewards() external {
       const Txn = await web3MasternodeMeta.methods
         .claimReward()
-        .send({ from: account });
+        .send({ from: account, gas: 500000 });
       setBtnTxn(false);
       checkSoyRewards();
     }
@@ -480,7 +481,7 @@ function App() {
       // function withdrawCollateral() external {
       const Txn = await web3MasternodeMeta.methods
         .removeNode(nodeAuthAddress)
-        .send({ from: account });
+        .send({ from: account, gas: 500000 });
       setBtnTxn(false);
     }
   };
@@ -493,7 +494,7 @@ function App() {
       // function closeNode() external {
       const Txn = await web3MasternodeMeta.methods
         .deactivateNode(nodeAuthAddress)
-        .send({ from: account });
+        .send({ from: account, gas: 500000 });
       setBtnTxn(false);
     }
   };
@@ -585,6 +586,7 @@ function App() {
       .send({
         from: account,
         value: web3.utils.toHex(amountCLOHex),
+        gas: 500000
       });
     return Txn;
   };
