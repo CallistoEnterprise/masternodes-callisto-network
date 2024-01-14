@@ -715,7 +715,7 @@ function App() {
                                 <div>
                                   <button
                                     className="btn_conn_wallet"
-                                    onClick={onClickMigration(3)}
+                                    onClick={onClickWithdrawAll}
                                   >
                                     Withdraw CLOE and SOY
                                   </button>
@@ -734,7 +734,7 @@ function App() {
                                 <div>
                                   <button
                                     className="btn_conn_wallet"
-                                    onClick={onClickMigration(1)}
+                                    onClick={onClickWithdrawCLOE}
                                   >
                                     Withdraw CLOE
                                   </button>
@@ -753,7 +753,7 @@ function App() {
                                   <div>
                                   <button
                                     className="btn_conn_wallet"
-                                    onClick={onClickMigration(2)}
+                                    onClick={onClickWithdrawSOY}
                                   >
                                     Withdraw SOY
                                   </button>
