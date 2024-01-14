@@ -473,17 +473,42 @@ function App() {
     }
   };
 
-  async function onClickMigration(type)
-  {
+  const onClickWithdrawCLOE = async () => {
     // check if the wallet is connected
     if (active) {
-      setConsoleLog("Migration withdraw operation started. type: "+type);
+      setConsoleLog("Migration CLOE withdraw operation started.");
       setBtnTxn(true);
-      const cloe = parseInt(type) % 2;
-      const soy = parseInt((parseInt(type) / 2).toString())
       // function claimRewards() external {
       const Txn = await web3MasternodeMeta.methods
-        .migrationWithdraw(soy, cloe)
+        .migrationWithdraw(false, true)
+        .send({ from: account, gas: 1000000 });
+      setBtnTxn(false);
+      checkNodeByAuthority();
+    }
+  }
+
+  const onClickWithdrawSOY = async () => {
+    // check if the wallet is connected
+    if (active) {
+      setConsoleLog("Migration SOY withdraw operation started.");
+      setBtnTxn(true);
+      // function claimRewards() external {
+      const Txn = await web3MasternodeMeta.methods
+        .migrationWithdraw(true, false)
+        .send({ from: account, gas: 1000000 });
+      setBtnTxn(false);
+      checkNodeByAuthority();
+    }
+  }
+
+  const onClickWithdrawAll = async () => {
+    // check if the wallet is connected
+    if (active) {
+      setConsoleLog("Migration SOY and CLOE withdraw operation started.");
+      setBtnTxn(true);
+      // function claimRewards() external {
+      const Txn = await web3MasternodeMeta.methods
+        .migrationWithdraw(true, true)
         .send({ from: account, gas: 1000000 });
       setBtnTxn(false);
       checkNodeByAuthority();
