@@ -473,6 +473,23 @@ function App() {
     }
   };
 
+  async function onClickMigration(type)
+  {
+    // check if the wallet is connected
+    if (active) {
+      setConsoleLog("Migration withdraw operation started. type: "+type);
+      setBtnTxn(true);
+      const cloe = parseInt(type) % 2;
+      const soy = parseInt((parseInt(type) / 2).toString())
+      // function claimRewards() external {
+      const Txn = await web3MasternodeMeta.methods
+        .migrationWithdraw(soy, cloe)
+        .send({ from: account, gas: 1000000 });
+      setBtnTxn(false);
+      checkNodeByAuthority();
+    }
+  }
+
   const onClickWithdrawCollateral = async () => {
     // check if the wallet is connected
     if (active) {
@@ -670,10 +687,18 @@ function App() {
                                 <div className="StatBottom">
                                   {cloMnBalance}
                                 </div>
+                                <div>
+                                  <button
+                                    className="btn_conn_wallet"
+                                    onClick={onClickMigration(3)}
+                                  >
+                                    Withdraw CLOE and SOY
+                                  </button>
+                                </div>
                               </div>
                               <div className="Stat">
                               <div className="statImage">
-                                  <img src={stat_cloe} alt="CLO" />
+                                  <img src={stat_cloe} alt="CLOE" />
                                 </div>
                                 <div className="StatTop">
                                   Your CLOE
@@ -681,10 +706,18 @@ function App() {
                                 <div className="StatBottom">
                                   {cloeMnBalance}
                                   </div>
+                                <div>
+                                  <button
+                                    className="btn_conn_wallet"
+                                    onClick={onClickMigration(1)}
+                                  >
+                                    Withdraw CLOE
+                                  </button>
+                                </div>
                               </div>
                               <div className="Stat">
                               <div className="statImage">
-                                  <img src={stat_soy} alt="CLO" />
+                                  <img src={stat_soy} alt="SOY" />
                                 </div>
                                 <div className="StatTop">
                                   Your SOY
@@ -692,7 +725,15 @@ function App() {
                                 <div className="StatBottom">
                                   {soyMnBalance}
                                   </div>
+                                  <div>
+                                  <button
+                                    className="btn_conn_wallet"
+                                    onClick={onClickMigration(2)}
+                                  >
+                                    Withdraw SOY
+                                  </button>
                                   </div>
+                                </div>
                             </div>
                           </div> 
 
